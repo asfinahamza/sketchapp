@@ -1,0 +1,108 @@
+{%extends 'user/hbase.ejs'%} {%load static%} {%block headers%} {%endblock%} {%block body%}
+<section class="page-title bg-2">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="block">
+            
+            <h1>Blogs</h1>
+            <p>Serving simple information for complex connections</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  
+  <div class="page-wrapper">
+      <div class="container">
+          <div class="row">
+            <div id="BlogListView">
+
+
+              
+            </div> 
+          </div>
+          <div class="text-center">
+              <ul class="pagination post-pagination">
+                  <li><a href="#">Prev</a>
+                  </li>
+                  <li class="active"><a href="#">1</a>
+                  </li>
+                  <li><a href="#">2</a>
+                  </li>
+                  <li><a href="#">3</a>
+                  </li>
+                  <li><a href="#">4</a>
+                  </li>
+                  <li><a href="#">5</a>
+                  </li>
+                  <li><a href="#">Next</a>
+                  </li>
+              </ul>
+          </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/js-cookie@beta/dist/js.cookie.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>  
+  
+  <script>
+      $(document).ready(function() {
+          var video = " ";
+          var page = 1;
+          $.ajax({
+                  type: "GET",
+                  dataType:'json',
+                  url: "/BlogListView" + "?format=json&page=" + page,
+                  success: function(data) {
+                      console.log(data.results);
+                      for(i = 0; i<data.results.length; i++){
+                          var pathID = data.results[i].id;
+                          var image = data.results[i].image;
+                          var name = data.results[i].title;
+                          var date = data.results[i].date;
+                          var content = data.results[i].content;
+                          var on_date = moment(date).format('MMMM d, YYYY');
+                          console.log(image);
+                          video +=
+                              '<div class="col-md-6 mb-5">' +
+                              '<a href="#">' +
+                              '<div class="post">' +
+                              '<div class="post-thumb">' +
+                              '<img src='+ image +' class="img-responsive" alt="">' +
+                              '</div>' +
+                              '<h3 class="post-title">' + name + '</h3>' +
+                              '<div class="post-meta">' +
+                              '<ul>' +
+                              '<li>' +
+                              '<i class="ion-calendar"></i>' + on_date +
+                              '</li>' +
+                              '</ul>' +
+                              '</div>' +
+                              '<div class="post-content">' +
+                              '<p>' + content + '</p>' +
+                              '<a href="/' + pathID + '/blogDetail " class="btn btn-main">Read More</a>' +
+                              '</div>' +
+                              '</div>' +
+                              '</a>' +
+                              '</div>'
+  
+                      }
+                      document.getElementById("BlogListView").innerHTML = video;
+                      // console.log(data);
+                      console.log("success");
+              
+                  }
+                  
+          });
+      });
+  </script>
+
+{%endblock%} 
+
+
+

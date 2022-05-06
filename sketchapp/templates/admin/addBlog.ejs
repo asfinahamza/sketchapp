@@ -1,0 +1,133 @@
+{%extends 'admin/dbase.ejs'%} {%load static%} {%block headers%} {%endblock%} {%block body%}
+<!-- Page Content  -->
+<div class="container mt-5">
+    <div class="row">
+      <div class="col-lg-12">
+          <div class="card">
+              <div class="card-body">
+                  <h4 class="card-title">Add Blog</h4>
+                  <div class="basic-form">
+                    <form action="#" id="fileUploadForm" method="POST">
+                        <div class="row">
+                                <div class="row">
+                                    <div class="col-12 form-group">
+                                        <input type="text" name="title" class="form-control" id="Title" placeholder="Title" value="{{data.title}}">
+                                    </div>
+
+                                    <div class="col-12 form-group">
+                                        <label id="gallery2" for="form_gallery-upload">Upload Image</label>
+                                        <input name="image" id="Image" class="form-control" type="file" accept=".png, .jpg, .jpeg">
+                                    </div>
+                                    <div class="col-12 form-group">
+                                        <label id="gallery2" for="form_gallery-upload">Upload Banner</label>
+                                        <input name="banner" id="Banner" class="form-control" type="file" accept=".png, .jpg, .jpeg">
+                                    </div>
+                                    
+                                    
+                                    <div class="col-12 form-group">
+                                        <div class="form-group">
+                                            <label>Comment:</label>
+                                            <textarea name="content" id="Content" class="form-control h-150px" rows="6"></textarea>
+                                        </div>
+                                        <!-- <input type="text" name="content" class="form-control" id="Content" placeholder="Content"> -->
+                                    </div>
+                                </div>
+                            
+                        </div>
+                        <div class="row">
+                            <div class="col-12 form-group ">
+                                <button id="btnSubmit" class="btn btn-primary">Submit</button>
+                                <button type="reset" class="btn btn-danger">cancel</button>
+                            </div>
+                        </div>
+                    </form>
+                  </div>
+              </div>
+          </div>
+      </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/js-cookie@beta/dist/js.cookie.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+
+
+
+
+<!--Video Upload with Progress Ajax-->
+<script>
+    $(document).ready(function() {
+        $("#btnSubmit").click(function(event) {
+            event.preventDefault();
+            var form = $('#fileUploadForm')[0];
+            var data = new FormData(form);
+            var token = '{{csrf_token}}';
+            data.append("data.object", "data.all.form");
+
+            //Validation
+            var name = $('#Title').val();
+            if (name.length < 1) {
+                Swal.fire("Error", 'Title-field is empty.', "error");
+                $("#btnSubmit").prop("enabled", true);
+                return false;
+            }
+            var desc = $('#Content').val();
+            if (desc.length < 1) {
+                Swal.fire("Error", 'Content-field is empty.', "error");
+                $("#btnSubmit").prop("enabled", true);
+                return false;
+            }
+            
+            
+            var image = $('#Image').val();
+            if (image.length < 1) {
+                Swal.fire("Error", 'Image-field is empty.', "error");
+                $("#btnSubmit").prop("enabled", true);
+                return false;
+            }
+            var banner = $('#Banner').val();
+            if (banner.length < 1) {
+                Swal.fire("Error", 'Banner-field is empty.', "error");
+                $("#btnSubmit").prop("enabled", true);
+                return false;
+            }
+
+            $("#btnSubmit").prop("disabled", true);
+
+            var urlId = window.location.pathname.split('/')[1]
+            var PostUrl;
+            if (urlId == 0) {
+                PostUrl = '/0/PostBlog'
+            } else {
+                PostUrl = '/' + urlId + '/PostBlog';
+            }
+
+            $.ajax({
+                headers: {
+                    "X-CSRFToken": token
+                },
+                type: "POST",
+                enctype: 'multipart/form-data',
+                url: PostUrl,
+                data: data,
+                processData: false,
+                contentType: false,
+                cache: false,
+                timeout: 600000,
+                async: true,
+            
+                success: function(data) {
+                    console.log("SUCCESS : ", data);
+                    $("#btnSubmit").prop("disabled", false);
+                    window.location.href = "/BlogList";
+                },
+                error: function(e) {
+                    console.log("ERROR : ", e);
+                    $("#btnSubmit").prop("enabled", false);
+                }
+            });
+        });
+    });
+</script>
+{%endblock%}

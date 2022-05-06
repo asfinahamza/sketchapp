@@ -1,0 +1,53 @@
+{%extends 'user/hbase.ejs'%} {%load static%} {%block headers%} {%endblock%} {%block body%}
+
+<section class="page-title bg-2">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="block">
+            <h1>Profile</h1>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+            
+    <!-- row -->
+
+<div class="page-wrapper">
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="media align-items-center">
+                    <div class="iq-movie">
+                        {% if user.image %}
+                        <img src="{{user.image.url}}" class="img-responsive" alt="" style="width: 70%;">
+                        {% endif %}
+                        
+                    </div>
+                </div>
+                
+            </div>
+            <div class="col-lg-8">
+                <table class="m-5">
+                    <tr>
+                        <td><h4>Name:</h4></td>
+                        <td><h4>{{user.name}}</h4></td>
+                    </tr>
+                    <tr>
+                        <td><h4>Contact:</h4></td>
+                        <td><h4>{{user.phone}}</h4></td>
+                    </tr>
+                    <tr>
+                        <td><h4>Email ID:</h4></td>
+                        <td><h4>{{user.email}}</h4></td>
+                    </tr>
+                </table>
+                <a class="btn btn-primary" href="/{{user.id}}/Profile">Edit</a>
+                
+            </div>
+        </div>  
+    </div>
+</div>
+{%endblock%}

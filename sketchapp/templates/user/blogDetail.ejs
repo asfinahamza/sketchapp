@@ -1,0 +1,83 @@
+{%extends 'user/hbase.ejs'%} {%load static%} {%block headers%} {%endblock%} {%block body%}
+<section class="page-title bg-2">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="block">
+            
+            <h1>Blog</h1>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <div class="page-wrapper">
+    <div class="container">
+              <div class="post">
+                <div class="post-thumb" id="nImage">
+                  <a href="blog-single.html">
+                    <img class="img-responsive" src="images/blog/blog-post-1.jpg" alt="">
+                  </a>
+                </div>
+                <h3 class="post-title" id="nTitle"><a href=""></a></h3>
+                <div class="post-meta">
+                  <ul>
+                    <li>
+                      <i class="ion-calendar"></i><span id="nDate"></span>
+                    </li>
+                    
+                    
+                  </ul>
+                </div>
+                <div class="post-content">
+                  <p id="nContent"></p>
+                  
+                </div>
+              </div>
+            
+        
+  </div>
+</div>
+
+  
+<script src="https://cdn.jsdelivr.net/npm/js-cookie@beta/dist/js.cookie.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        var pathID = window.location.pathname.split('/')[1];
+        var pathUrl = '/' + pathID + '/BlogDetailAPIView';
+        $.ajax({
+                type: "GET",
+                dataType:'json',
+                url: pathUrl,
+                success: function(data) {
+                    console.log(data);
+                    var title = data.data.title;
+                    var banner = data.data.image;
+                    var date = data.data.date;
+                    var on_date = moment(date).format('MMMM d, YYYY');
+                    console.log(date)
+                    var content = data.data.content;
+                    var imageBox = "<img src=" + banner + " width = '100%' class='mb-4'>";
+                    document.getElementById("nTitle").innerHTML = title;
+                    document.getElementById("nImage").innerHTML = imageBox;
+                    document.getElementById("nContent").innerHTML = content;
+                    document.getElementById("nDate").innerHTML = on_date;
+            
+                }
+                
+        });
+    });
+</script>
+
+  
+
+{%endblock%} 
+
+
+

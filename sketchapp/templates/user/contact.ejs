@@ -1,0 +1,167 @@
+{%extends 'user/hbase.ejs'%} {%load static%} {%block headers%} {%endblock%} {%block body%}
+
+
+
+<section class="page-title bg-2">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="block">
+            <h1>Drop Us A Note</h1>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- contact form start -->
+  <section class="contact-form">
+      <div class="container">
+          <div class="row">
+            <form action="#" id="fileUploadForm" method="POST">
+                  <div class="col-md-6 col-sm-12">
+                      <div class="block">
+                          <div class="form-group">
+                              <input name="name" id="Name" type="text" class="form-control" placeholder="Your Name">
+                          </div>
+                          <div class="form-group">
+                              <input name="email" id="Email" type="email" class="form-control" placeholder="Email Address">
+                          </div>
+                          <div class="form-group">
+                              <input name="subject" id="Subject" type="text" class="form-control" placeholder="Subject">
+                          </div>
+                      </div>
+                  </div>
+                  <div class="col-md-6 col-sm-12">
+                      <div class="block">
+                          <div class="form-group-2">
+                              <textarea name="message" id="Message" class="form-control" rows="4"
+                                  placeholder="Your Message"></textarea>
+                          </div>
+                          <button class="btn btn-default" id="btnSubmit">Send Message</button>
+                      </div>
+                  </div>
+                  <div class="error" id="error">Sorry Msg dose not sent</div>
+                  <div class="success" id="success">Message Sent</div>
+            </form>
+          </div>
+          <div class="contact-box row">
+              <div class="col-md-6 col-sm-12">
+                  <div class="block">
+                      <h2>Stop By For A visit</h2>
+                      <ul class="address-block">
+                          <li>
+                              <i class="ion-ios-location-outline"></i>North Main Street,Brooklyn Australia
+                          </li>
+                          <li>
+                              <i class="ion-ios-email-outline"></i>Email: contact@mail.com
+                          </li>
+                          <li>
+                              <i class="ion-ios-telephone-outline"></i>Phone:+88 01672 506 744
+                          </li>
+                      </ul>
+                      <ul class="social-icons">
+                          <li>
+                              <a href="http://www.themefisher.com"><i class="ion-social-googleplus-outline"></i></a>
+                          </li>
+                          <li>
+                              <a href="http://www.themefisher.com"><i class="ion-social-linkedin-outline"></i></a>
+                          </li>
+                          <li>
+                              <a href="http://www.themefisher.com"><i class="ion-social-pinterest-outline"></i></a>
+                          </li>
+                          <li>
+                              <a href="http://www.themefisher.com"><i class="ion-social-dribbble-outline"></i></a>
+                          </li>
+                          <li>
+                              <a href="http://www.themefisher.com"><i class="ion-social-twitter-outline"></i></a>
+                          </li>
+                          <li>
+                              <a href="http://www.themefisher.com"><i class="ion-social-facebook-outline"></i></a>
+                          </li>
+                      </ul>
+                  </div>
+              </div>
+              <div class="col-md-6 col-sm-12">
+                  <div class="block">
+                      <div class="google-map">
+                          <div class="map" id="map_canvas" data-latitude="51.5223477" data-longitude="-0.1622023" data-marker="images/marker.png"></div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </section>
+
+  
+
+
+
+<!--Video Upload with Progress Ajax-->
+<script src="https://cdn.jsdelivr.net/npm/js-cookie@beta/dist/js.cookie.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+
+<script>
+    $(document).ready(function() {
+        $("#btnSubmit").click(function(event) {
+            var form = $('#fileUploadForm')[0];
+            var data = new FormData(form);
+            var token = '{{csrf_token}}';
+
+            var nameN = $('#Name').val();
+            if (nameN.length < 1) {
+                Swal.fire("Info", 'Title-field is empty.', "info");
+                return false;
+            }
+
+            var emailN = $('#Email').val();
+            if (emailN.length < 1) {
+                Swal.fire("Info", 'Email-field is empty.', "info");
+                return false;
+            }
+
+            var subjectN = $('#Subject').val();
+            if (subjectN.length < 1) {
+                Swal.fire("Info", 'Subject-field is empty.', "info");
+                return false;
+            }
+            
+            var messageN = $('#Message').val();
+            if (messageN.length < 1) {
+                Swal.fire("Info", 'Message-field is empty.', "info");
+                return false;
+            }
+
+            $.ajax({
+                headers: {
+                    "X-CSRFToken": token
+                },
+                type: "POST",
+                url: '/PostMessage',
+                data: data,
+
+                processData: false,
+                cache: false,
+                contentType: false,
+                timeout: 600000,
+                async: true,
+                
+                success: function(data) {
+                    console.log(data);
+                    console.log("success");
+                    Swal.fire("Info", 'Done', "info");
+
+                    window.setTimeout(function() {
+                        location.href = "/contact";
+                    }, 1000);
+                },
+                error: function(e) {
+                    console.log(e);
+                }
+            });
+            return false;
+        });
+    });
+</script>
+
+{%endblock%}

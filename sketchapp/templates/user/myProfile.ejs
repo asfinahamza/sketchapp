@@ -1,0 +1,134 @@
+{%extends 'user/hbase.ejs'%} {%load static%} {%block headers%} {%endblock%} {%block body%}
+
+
+<section class="page-title bg-2">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="block">
+            <h1>Manage Profile</h1>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- contact form start -->
+  <section class="contact-form">
+      <div class="container">
+            <form action="#" id="fileUploadForm" method="POST">
+                      <div class="block">
+                        <div class="form-group">
+                              <input name="name" id="Name" type="text" class="form-control" placeholder="Your Name">
+                        </div>
+                        <div class="form-group">
+                            <input name="phone" id="Phone" type="number" class="form-control" placeholder="Contact Number">
+                        </div>
+                        <div class="col-12 form-group">
+                            <label id="gallery2" for="form_gallery-upload">Upload Image</label>
+                            <input name="image" id="Image" class="form-control" type="file" accept=".png, .jpg, .jpeg">
+                        </div>
+                        <div class="form-group">
+                              <input name="email" id="Email" type="text" class="form-control" placeholder="Email Address">
+                        </div>
+                        <div class="form-group">
+                            <div class="form-check form-check-inline">
+                                <label class="form-check-label">
+                                    <input name="is_admin" type="checkbox" class="form-check-input" value="">Admin</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <label class="form-check-label">
+                                    <input name="is_user" type="checkbox" class="form-check-input" value="">User</label>
+                            </div>
+                            
+                        </div>
+                        <button class="btn btn-default" id="btnSubmit">Submit</button> 
+                      </div>
+                  
+                  <div class="error" id="error">Sorry Msg dose not sent</div>
+                  <div class="success" id="success">Message Sent</div>
+            </form>
+
+      </div>
+  </section>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/js-cookie@beta/dist/js.cookie.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+  
+  <script>
+      $(document).ready(function() {
+        $("#btnSubmit").click(function(event) {
+            event.preventDefault();
+            var form = $('#fileUploadForm')[0];
+            var data = new FormData(form);
+            var token = '{{csrf_token}}';
+
+            var nameN = $('#Name').val();
+            if (nameN.length < 1) {
+                Swal.fire("Info", 'Name-field is empty.', "info");
+                return false;
+            }
+
+            var phoneN = $('#Phone').val();
+            if (phoneN.length < 1) {
+                Swal.fire("Info", 'Phone-field is empty.', "info");
+                return false;
+            }
+
+            var imageN = $('#Image').val();
+            if (imageN.length < 1) {
+                Swal.fire("Info", 'Image-field is empty.', "info");
+                return false;
+            }
+
+            var emailN = $('#Email').val();
+            if (emailN.length < 1) {
+                Swal.fire("Info", 'Email-field is empty.', "info");
+                return false;
+            }
+
+
+            data.append("data.object", "data.all.form");
+
+            $("#btnSubmit").prop("disabled", true);
+            var urlId = window.location.pathname.split('/')[1]
+            var PostUrl;
+            if (urlId == 0) {
+                PostUrl = '/0/PostProfile'
+            } else {
+                PostUrl = '/' + urlId + '/PostProfile';
+            }
+            $.ajax({
+                headers: {
+                    "X-CSRFToken": token
+                },
+                type: "POST",
+                enctype: 'multipart/form-data',
+                url: PostUrl,
+                data: data,
+                processData: false,
+                contentType: false,
+                cache: false,
+                timeout: 600000,
+                async: true,
+                success: function(data) {
+                    console.log("SUCCESS : ", data);
+                    $("#btnSubmit").prop("disabled", false);
+                    Swal.fire("Info", 'Done', "info");
+
+                    window.setTimeout(function() {
+                        location.href = "/0/Profile";
+                    }, 1000);
+                },
+                error: function(e) {
+                    console.log("ERROR : ", e);
+                    $("#btnSubmit").prop("enabled", false);
+                    
+                }
+            })
+        })
+      })
+  </script>
+
+{%endblock%}

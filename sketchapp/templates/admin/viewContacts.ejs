@@ -1,0 +1,74 @@
+{%extends 'admin/dbase.ejs'%} {%load static%} {%block headers%} {%endblock%} {%block body%}
+<div class="content-body">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Messages</h4>
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered zero-configuration">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Subject</th>
+                                        <th style="width: 20%;">Message</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="contactListView">
+                                    
+                                </tbody>
+                                
+                            </table>
+                        </div>
+        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>  
+
+</div>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/js-cookie@beta/dist/js.cookie.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<script>
+
+    $(document).ready(function() {
+        var content = " ";
+        var page = 1; 
+        $.ajax({
+            type: "GET",
+            dataType:'json',
+            url: "/MessageListView" + "?format=json&page=" + page,
+            success: function(data) {
+                console.log(data.results);
+                for(i = 0; i<data.results.length; i++){
+                    var pathID = data.results[i].id;
+                    var name = data.results[i].name;
+                    var subject = data.results[i].subject;
+                    var message = data.results[i].message;
+                    content +=
+                        '<tr>' +
+                        '<td>' + name + '</td>' +
+                        '<td>' + subject + '</td>' +
+                        '<td>' + message + '</td>' +
+                        '<td><span>' +
+                        '<a href="/' + pathID + '/DeleteMessage " onclick="return confirm("Are you sure?")" data-toggle="tooltip" data-placement="top" title="Close"><i class="fa fa-close color-danger"></i></a>' +
+                        '</span></td>' +
+                        '</tr>'
+
+                }
+                document.getElementById("contactListView").innerHTML = content;
+                console.log("success");
+            }
+        })
+    })
+
+</script>
+
+{%endblock%}
